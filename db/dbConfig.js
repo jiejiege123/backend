@@ -8,12 +8,10 @@
 const mysql = require('mysql');
 const connect = {
 	config:{
-		// host:"192.168.3.241",
 		host: "localhost",
         user: "root",
         password: "jiejiege",
         port: 3306,
-        //database: "flowersback",
         database: "blog",
         multipleStatements: true,
 	},
