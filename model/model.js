@@ -21,6 +21,11 @@ const header = {
         let sql = 'SELECT * FROM diclist WHERE id=?';
         //db.config.host = 'localhost';
         db.connection(sql, [id], cb);
-    }
+    },
+    login: function (name, psd, cb) {
+        let sql ="select * from user where name = '" + name + "' and psd = '" + psd + "'";
+        //db.config.host = 'localhost';
+        db.connection(sql, [], cb);
+    },
 };
 module.exports = header;
