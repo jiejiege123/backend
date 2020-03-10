@@ -21,5 +21,10 @@ router.route('/getTestApiPost')
 router.route('/login')
 	.post(control.login)
 
+// 设置个人信息
+router.route('/blog/profile')
+	.post(control.profile)
 
+router.route('/blog/getInfo')
+	.get(control.getInfo)
 module.exports = router

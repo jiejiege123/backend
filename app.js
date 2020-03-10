@@ -74,7 +74,7 @@ app.use(router);
 //   res.send('error');
 // });
 
-// //配置端口
+//配置端口
 // app.listen(3000,function(){
 // 	console.log('服务器已启动，请访问localhost:3000');
 // });

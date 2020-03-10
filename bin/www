@@ -26,7 +26,7 @@ var server = http.createServer(app);
  */
 
 server.listen(port,function(){
-	console.log('服务器已启动，请访问localhost:3000');
+	console.log('服务器已启动，请访问localhost:'+port);
 });
 server.on('error', onError);
 server.on('listening', onListening);
