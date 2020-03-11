@@ -9,14 +9,6 @@ const express = require('express')
 const router = express.Router()
 //控制器
 const control = require('../controller/index.js')
-// 测试 get
-router.route('/getTestApi')
-	.get(control.getTest)
-
-router.route('/getTestApiPost')
-	.post(control.getTestPost)
-
-
 // 登录
 router.route('/login')
 	.post(control.login)

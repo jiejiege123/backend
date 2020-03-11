@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-03-11 08:29:17
+ * @LastEditTime: 2020-03-11 11:11:26
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \backend\app.js
+ */
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -33,13 +41,14 @@ app.all('/*', function(req, res, next) {
   //     Cookies[ parts[ 0 ].trim() ] = ( parts[ 1 ] || '' ).trim(); // 把数组内容以json的形式存储
   // });
   let Cookies = req.cookies
-  console.log('Cookies:' + Cookies.sidebarStatus)
   let flag = true
   if (Cookies.account) {
     let cok = Cookies.account.split('-')
     let name = md5(cok[0])
     let psd = md5(cok[1])
     name + psd === Cookies.ssid ? flag = true : flag = false
+  } else {
+    flag = false
   }
   if (flag) {
     next()
