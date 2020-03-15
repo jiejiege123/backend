@@ -27,7 +27,7 @@ var upload = multer({
 }).array('images');
 
 //post请求 提交表单
-router.post('/blog/uploadImage', function (req, res, next) {
+router.post('/backend/uploadImage', function (req, res, next) {
     //多个文件上传
     upload(req, res, function (err) {
         if (err) {

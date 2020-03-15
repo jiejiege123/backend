@@ -76,15 +76,21 @@ const project = {
                 res.cookie('ssid', ssid)
                 //console.log(mydata);
                 res.send(Data);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '登录失败, 请检查后台'
+                });
             }
         }
         model.login(username, password, cb);
     },
     profile: function (req, res) {
-        console.log(req.body) // POST 可以这样获取
+        console.log('req.body',req.body) // POST 可以这样获取
         // console.log(req.param('id'))  // 参数写法 get post 都有效
         function cb(err, data) {
-            console.log(data)
+            console.log('data',data)
             if (err == null) {
                 //console.log(mydata);
                 let mydata = {
@@ -93,14 +99,20 @@ const project = {
                     Msg: '编辑成功'
                 }
                 res.send(mydata);
+            } else {
+                console.log(err)
+                let mydata = {
+                    Status: 400,
+                    Data: '',
+                    Msg: '编辑失败'
+                }
+                res.send(mydata);
             }
         }
         model.profile(req.body, cb);
     },
     getInfo:function (req,res) {
         // console.log(req.body) // POST 可以这样获取
-        let username = req.body.username
-        let password = req.body.password
         // console.log(username, password)
         // console.log(req.param('id'))  // 参数写法 get post 都有效
         function cb(err, data) {
@@ -133,10 +145,337 @@ const project = {
                 }
                 //console.log(mydata);
                 res.send(Data);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '信息获取失败'
+                });
             }
         }
         model.getInfo(req.param('id'), cb);
     },
+    getArticle: function (req, res) {
+        function cb(err, data) {
+            if (err == null) {
+                //console.log(mydata);
+                let mydata = {
+                    Status: 200,
+                    Data: data[0].body,
+                    Msg: '成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '信息获取失败'
+                });
+            }
+        }
+        model.getArticle(cb);
+    },
+    getCategories: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: {
+                        data: data[0],
+                        totle: data[1][0].totle
+                    },
+                    Msg: '成功'
+                }
+                res.send(mydata);
+                // model.getCategoriesRows(cbrow)
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据获取失败'
+                })
+            }
+        }
+        let page = parseInt(req.param('page'))
+        let pageSize = parseInt(req.param('pageSize'))
+        let keywords = req.param('keyword')
+        model.getCategories(page,pageSize,keywords, cb);
+    },
+    getCategoriesAll:function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: {
+                        data: data,
+                    },
+                    Msg: '成功'
+                }
+                res.send(mydata);
+                // model.getCategoriesRows(cbrow)
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据获取失败'
+                })
+            }
+        }
+        model.getCategoriesAll(cb);
+    },
+    addCategories: function (req,res) {
+
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '添加成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据添加失败'
+                })
+            }
+        }
+        model.addCategories(req.body, cb);
+    },
+    updateCategories: function (req,res) {
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '修改成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据修改失败'
+                })
+            }
+        }
+        model.updateCategories(req.body, cb);
+    },
+    delCategories: function (req,res) {
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '删除成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据删除失败'
+                })
+            }
+        }
+        model.delCategories(req.body, cb);
+    },
+    // 标签
+    getTags: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: {
+                        data: data[0],
+                        totle: data[1][0].totle
+                    },
+                    Msg: '成功'
+                }
+                res.send(mydata);
+                // model.getTagsRows(cbrow)
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据获取失败'
+                })
+            }
+        }
+        let page = parseInt(req.param('page'))
+        let pageSize = parseInt(req.param('pageSize'))
+        let keywords = req.param('keyword')
+        model.getTags(page,pageSize,keywords, cb);
+    },
+    addTags: function (req,res) {
+
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '添加成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据添加失败'
+                })
+            }
+        }
+        model.addTags(req.body, cb);
+    },
+    updateTags: function (req,res) {
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '修改成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据修改失败'
+                })
+            }
+        }
+        model.updateTags(req.body, cb);
+    },
+    delTags: function (req,res) {
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '删除成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据删除失败'
+                })
+            }
+        }
+        model.delTags(req.body, cb);
+    },
+
+    // 文章列表
+    getArticleList: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: {
+                        data: data[0],
+                        totle: data[1][0].totle
+                    },
+                    Msg: '成功'
+                }
+                res.send(mydata);
+                // model.getTagsRows(cbrow)
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据获取失败'
+                })
+            }
+        }
+        let page = parseInt(req.param('page'))
+        let pageSize = parseInt(req.param('pageSize'))
+        let tags = req.param('tags')
+        let categories = req.param('categories')
+        let keywords = req.param('keyword')
+        model.getArticleList(page,pageSize,keywords,tags,categories, cb);
+    },
+    addArticle: function (req,res) {
+
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '添加成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据添加失败'
+                })
+            }
+        }
+        model.addArticle(req.body, cb);
+    },
+    updateArticle: function (req,res) {
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '修改成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据修改失败'
+                })
+            }
+        }
+        model.updateArticle(req.body, cb);
+    },
+    delArticle: function (req,res) {
+        function cb(err, data) {
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '删除成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据删除失败'
+                })
+            }
+        }
+        model.delArticle(req.body, cb);
+    },
+
 };
 
 module.exports = project;

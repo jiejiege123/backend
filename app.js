@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 登录拦截 判断登录 
 // 思路 先判断cookies中是否有account 和 ssid 没有的话 肯定就是登录 找到用户名和密码
 // 加密保存到ssid 然后加密account
-app.all('/*', function(req, res, next) {
+app.use('/backend', function(req, res, next) {
   // var Cookies = {};
   // req.headers.cookie && req.headers.cookie.split(';').forEach(function( Cookie ) {  // forEach编辑数组
   //     var parts = Cookie.split('=');  // 以=为分隔符，把字符串分隔成数组
