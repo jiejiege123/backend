@@ -26,9 +26,9 @@ router.route('/blog/article')
 
 ////////////////////////////////////////////////////////////////////  分类
 // 获取分类 
-router.route('/backend/getCategories')
+router.route('/blog/getCategories')
 	.get(control.getCategories)
-router.route('/backend/getCategoriesAll')
+router.route('/blog/getCategoriesAll')
 	.get(control.getCategoriesAll)
 // 添加分类
 router.route('/backend/addCategories')
@@ -41,7 +41,7 @@ router.route('/backend/updateCategories')
 	.post(control.updateCategories)
 
 ////////////////////////////////////////////////////////////////////  标签
-router.route('/backend/getTags')
+router.route('/blog/getTags')
 	.get(control.getTags)
 // 添加分类
 router.route('/backend/addTags')
@@ -58,11 +58,37 @@ router.route('/blog/getArticleList')
 	.get(control.getArticleList)
 router.route('/backend/addArticle')
 	.post(control.addArticle)
-// 删除分类
+// 删除文章
 router.route('/backend/delArticle')
 	.post(control.delArticle)
-// 编辑分类
+// 编辑文章
 router.route('/backend/updateArticle')
 	.post(control.updateArticle)
+
+// 独立页面
+router.route('/blog/getPagesList')
+	.get(control.getPagesList)
+router.route('/blog/getPage')
+	.get(control.getPage)
+router.route('/backend/addPages')
+	.post(control.addPages)
+// 删除独立页面
+router.route('/backend/delPages')
+	.post(control.delPages)
+// 编辑独立页面
+router.route('/backend/updatePages')
+	.post(control.updatePages)
+
+
+
+// /////////////////////////////////////// 博客前台
+// 获取路由
+router.route('/blog/getRouter')
+	.get(control.getRouter)
+router.route('/blog/getArticleOrder')
+	.get(control.getArticleOrder)
+	
+
+
 
 module.exports = router

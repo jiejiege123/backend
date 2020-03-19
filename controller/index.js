@@ -7,7 +7,6 @@
 /* jshint esversion: 6 */
 const model = require('../model/model.js');
 var md5=require('md5-node');
-
 // const path=require('path');
 // const fs=require('fs');
 const project = {
@@ -18,7 +17,6 @@ const project = {
         // console.log(req.params)
         console.log(req.param('id'))  // 参数写法 卧槽 相当的死啊
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {data:data};
                 //console.log(mydata);
@@ -31,7 +29,6 @@ const project = {
         console.log(req.body) // POST 可以这样获取
         // console.log(req.param('id'))  // 参数写法 get post 都有效
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {data:data};
                 //console.log(mydata);
@@ -59,6 +56,14 @@ const project = {
                         },
                         Msg: '登录成功'
                     }
+                    let account = md5(data[0].name) +'-'+ md5(data[0].psd)
+                    let ssid = md5(md5(data[0].name)) + md5(md5(data[0].psd))
+                    // 设置cookies
+                    // res.writeHead(200, {
+                    //     'Set-Cookie': ['ssid = ' + ssid, 'account = ' + account] // cookie名=cookie值
+                    // });
+                    res.cookie('account', account)
+                    res.cookie('ssid', ssid)
                 } else {
                     Data = {
                         Status: 400,
@@ -66,15 +71,6 @@ const project = {
                         Msg: '账号或者密码错误'
                     }
                 }
-                let account = md5(data[0].name) +'-'+ md5(data[0].psd)
-                let ssid = md5(md5(data[0].name)) + md5(md5(data[0].psd))
-                // 设置cookies
-                // res.writeHead(200, {
-                //     'Set-Cookie': ['ssid = ' + ssid, 'account = ' + account] // cookie名=cookie值
-                // });
-                res.cookie('account', account)
-                res.cookie('ssid', ssid)
-                //console.log(mydata);
                 res.send(Data);
             } else {
                 res.send({
@@ -161,7 +157,7 @@ const project = {
                 //console.log(mydata);
                 let mydata = {
                     Status: 200,
-                    Data: data[0].body,
+                    Data: data[0][0],
                     Msg: '成功'
                 }
                 res.send(mydata);
@@ -173,7 +169,7 @@ const project = {
                 });
             }
         }
-        model.getArticle(cb);
+        model.getArticle( req.param('id'), cb);
     },
     getCategories: function (req,res) {
         function cb(err, data) {
@@ -182,7 +178,7 @@ const project = {
                     Status: 200,
                     Data: {
                         data: data[0],
-                        totle: data[1][0].totle
+                        total: data[1][0].total
                     },
                     Msg: '成功'
                 }
@@ -228,7 +224,6 @@ const project = {
     addCategories: function (req,res) {
 
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -250,7 +245,6 @@ const project = {
     },
     updateCategories: function (req,res) {
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -271,7 +265,6 @@ const project = {
     },
     delCategories: function (req,res) {
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -297,7 +290,7 @@ const project = {
                     Status: 200,
                     Data: {
                         data: data[0],
-                        totle: data[1][0].totle
+                        total: data[1][0].total
                     },
                     Msg: '成功'
                 }
@@ -319,7 +312,6 @@ const project = {
     addTags: function (req,res) {
 
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -341,7 +333,6 @@ const project = {
     },
     updateTags: function (req,res) {
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -362,7 +353,6 @@ const project = {
     },
     delTags: function (req,res) {
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -389,7 +379,7 @@ const project = {
                     Status: 200,
                     Data: {
                         data: data[0],
-                        totle: data[1][0].totle
+                        total: data[1][0].total
                     },
                     Msg: '成功'
                 }
@@ -414,7 +404,6 @@ const project = {
     addArticle: function (req,res) {
 
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -436,7 +425,6 @@ const project = {
     },
     updateArticle: function (req,res) {
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -457,7 +445,6 @@ const project = {
     },
     delArticle: function (req,res) {
         function cb(err, data) {
-            console.log(data)
             if (err == null) {
                 let mydata = {
                     Status: 200,
@@ -476,6 +463,157 @@ const project = {
         model.delArticle(req.body, cb);
     },
 
+    // 独立页面列表
+    getPagesList: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: {
+                        data: data[0],
+                        total: data[1][0].total
+                    },
+                    Msg: '成功'
+                }
+                res.send(mydata);
+                // model.getTagsRows(cbrow)
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据获取失败'
+                })
+            }
+        }
+        let page = parseInt(req.param('page'))
+        let pageSize = parseInt(req.param('pageSize'))
+        let keywords = req.param('keyword')
+        model.getPagesList(page,pageSize,keywords, cb);
+    },
+    getPage: function (req, res) {
+        function cb(err, data) {
+            if (err == null) {
+                //console.log(mydata);
+                let mydata = {
+                    Status: 200,
+                    Data: data[0],
+                    Msg: '成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '信息获取失败'
+                });
+            }
+        }
+        model.getPage( req.param('id'), cb);
+    },
+    addPages: function (req,res) {
+
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '添加成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据添加失败'
+                })
+            }
+        }
+        model.addPages(req.body, cb);
+    },
+    updatePages: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '修改成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据修改失败'
+                })
+            }
+        }
+        model.updatePages(req.body, cb);
+    },
+    delPages: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '删除成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据删除失败'
+                })
+            }
+        }
+        model.delPages(req.body, cb);
+    },
+
+    // 前台 获取路由
+    getRouter: function (req, res) {
+        function cb(err, data) {
+            if (err == null) {
+                //console.log(mydata);
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '获取失败'
+                });
+            }
+        }
+        model.getRouter(cb);
+    },
+    getArticleOrder: function (req, res) {
+        function cb(err, data) {
+            if (err == null) {
+                //console.log(mydata);
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '获取失败'
+                });
+            }
+        }
+        model.getArticleOrder(cb);
+    },
 };
 
 module.exports = project;

@@ -25,9 +25,9 @@ const header = {
         //db.config.host = 'localhost';
         db.connection(sql, [params], cb);
     },
-    getArticle: function (cb) {
+    getArticle: function (id,cb) {
         // let sql ="update * from user where id = '" + params.id + "' and psd = '" + psd + "'";
-        let sql =`select * from article where id = 1`;
+        let sql =`select * from article where id = ${id}; update article set visits = visits + 1 where id = ${id}`
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
@@ -35,23 +35,23 @@ const header = {
     // 分类
     getCategories: function (page, pageSize, keywords, cb) {
         let start = (page - 1) * pageSize
-        let sql =`select * from categories where cagName like '%${keywords}%' limit ${start}, ${pageSize};select count(*) as totle from categories where id > 0`;
+        let sql =`select * from categories where cagName like '%${keywords}%' limit ${start}, ${pageSize};select count(*) as total from categories where id > 0 and cagName like '%${keywords}%'`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
     getCategoriesAll: function ( cb) {
-        let sql =`select id, cagName from categories`;
+        let sql =`select id, cagName, pid, icon, eName from categories`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
     addCategories: function (params,cb) {
-        let sql =`insert into categories(cagName,pid,eName,decs,upIndex) value(?,?,?,?,?)`;
-        db.connection(sql, [params.cagName, params.pid, params.eName, params.decs, params.upIndex ], cb);
+        let sql =`insert into categories(cagName,pid,eName,decs,upIndex,icon) value(?,?,?,?,?,?)`;
+        db.connection(sql, [params.cagName, params.pid, params.eName, params.decs, params.upIndex, params.icon ], cb);
     },
     updateCategories: function (params,cb) {
-        let sql =`update categories set cagName = ?, pid = ?, eName = ?, decs = ?, upIndex = ? where id = ${params.id}`;
+        let sql =`update categories set cagName = ?, pid = ?, eName = ?, decs = ?, upIndex = ?,  icon = ? where id = ${params.id}`;
         //db.config.host = 'localhost';
-        db.connection(sql, [params.cagName,params.pid, params.eName,params.decs ,params.upIndex], cb);
+        db.connection(sql, [params.cagName,params.pid, params.eName,params.decs ,params.upIndex, params.icon], cb);
     },
     delCategories: function (params,cb) {
         let sql =`delete from categories where id in (${params.id})`;
@@ -62,7 +62,7 @@ const header = {
     // 标签
     getTags: function (page, pageSize, keywords, cb) {
         let start = (page - 1) * pageSize
-        let sql =`select * from tags where tagName like '%${keywords}%' limit ${start}, ${pageSize};select count(*) as totle from tags where id > 0`;
+        let sql =`select * from tags where tagName like '%${keywords}%' limit ${start}, ${pageSize};select count(*) as total from tags where id > 0 and tagName like '%${keywords}%'`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
@@ -84,22 +84,72 @@ const header = {
     // 文章
     getArticleList: function (page, pageSize, keywords, tags, categories, cb) {
         let start = (page - 1) * pageSize
-        let sql =`select * from article where title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%' limit ${start}, ${pageSize};select count(*) as totle from tags where id > 0`;
+        let sql =`select id, author, creatTime, updateTime, categories,tags,status,commentNums,title, abstract from article where title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%' limit ${start}, ${pageSize};select count(*) as total from article where id > 0 and title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%'`;
         //db.config.host = 'localhost';
-        console.log(sql)
         db.connection(sql, [], cb);
     },
     addArticle: function (params,cb) {
-        let sql =`insert into article(title,eName,decs) value(?,?,?)`;
-        db.connection(sql, [params.title, params.eName, params.decs, ], cb);
+        let abstract
+        if (params.body.length > 130) {
+            abstract = params.body.slice(0, 130).replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi,'').replace(/<[^>]+?>/g,'').replace(/\s+/g,' ').replace(/ /g,' ').replace(/>/g,' ')+'...'
+        } else {
+            abstract = params.body.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi,'').replace(/<[^>]+?>/g,'').replace(/\s+/g,' ').replace(/ /g,' ').replace(/>/g,' ')
+        }
+        let sql =`insert into article(author,title,body,creatTime,updateTime, tags, categories, md, abstract) value(?,?,?,?,?,?,?,?,?);update time set activeTime = '${new Date().getTime()}'`;
+        db.connection(sql, [params.author,params.title, params.body, params.creatTime,params.updateTime, params.tags, params.categories, params.md, abstract], cb);
     },
     updateArticle: function (params,cb) {
-        let sql =`update article set title = ?, eName = ?, decs = ? where id = ${params.id}`;
+        let abstract
+        if (params.body.length > 130) {
+            abstract = params.body.slice(0, 130).replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi,'').replace(/<[^>]+?>/g,'').replace(/\s+/g,' ').replace(/ /g,' ').replace(/>/g,' ')+'...'
+        } else {
+            abstract = params.body.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi,'').replace(/<[^>]+?>/g,'').replace(/\s+/g,' ').replace(/ /g,' ').replace(/>/g,' ')
+        }
+        let sql =`update article set title=?, body=?,updateTime=?, tags=?, categories=?, md=?, abstract=? where id = ${params.id};update time set activeTime = '${new Date().getTime()}'`;
         //db.config.host = 'localhost';
-        db.connection(sql, [params.title, params.eName, params.decs], cb);
+        db.connection(sql, [params.title, params.body, params.updateTime, params.tags, params.categories, params.md, abstract], cb);
     },
     delArticle: function (params,cb) {
-        let sql =`delete from article where id in (${params.id})`;
+        let sql =`delete from article where id in (${params.id});update time set activeTime = '${new Date().getTime()}'`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [], cb);
+    },
+
+    // 页面
+    getPagesList: function (page, pageSize, keywords, cb) {
+        let start = (page - 1) * pageSize
+        let sql =`select id, creatTime, updateTime, commentNums,title,upIndex,eName,icon from pages where title like '%${keywords}%' limit ${start}, ${pageSize};select count(*) as total from pages where id > 0 and title like '%${keywords}%'`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [], cb);
+    },
+    getPage: function (id,cb) {
+        // let sql ="update * from user where id = '" + params.id + "' and psd = '" + psd + "'";
+        let sql =`select * from pages where id = ${id}`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [], cb);
+    },
+    addPages: function (params,cb) {
+        let sql =`insert into pages(title,body,creatTime,updateTime, upIndex, md, eName, icon) value(?,?,?,?,?,?,?,?);update time set activeTime = '${new Date().getTime()}'`;
+        db.connection(sql, [params.title, params.body, params.creatTime,params.updateTime, params.upIndex, params.md, params.eName, params.icon], cb);
+    },
+    updatePages: function (params,cb) {
+        let sql =`update pages set title=?, body=?,updateTime=?, upIndex=?, md=?, eName=?, icon=? where id = ${params.id};update time set activeTime = '${new Date().getTime()}'`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [params.title, params.body, params.updateTime, params.upIndex, params.md, params.eName, params.icon], cb);
+    },
+    delPages: function (params,cb) {
+        let sql =`delete from pages where id in (${params.id});update time set activeTime = '${new Date().getTime()}'`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [], cb);
+    },
+
+    getRouter: function (cb) {
+        let sql =`select id,title,eName,upIndex,icon from pages;select * from categories`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [], cb);
+    },
+    getArticleOrder: function (cb) {
+        let sql =`select id, author, creatTime, updateTime, categories,tags,status,commentNums,title,visits, abstract from article order by visits DESC limit 0,10; select id, author, creatTime, updateTime, categories,tags,status,commentNums,title,visits,abstract from article order by updateTime DESC limit 0,10;select count(*) as total from article where id > 0;select * from time`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },

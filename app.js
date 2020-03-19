@@ -30,10 +30,27 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // 静态资源
 app.use(express.static(path.join(__dirname, 'public')));
-
+let activeTime
 // 登录拦截 判断登录 
 // 思路 先判断cookies中是否有account 和 ssid 没有的话 肯定就是登录 找到用户名和密码
 // 加密保存到ssid 然后加密account
+app.all('*', function(req, res, next) {
+  if (req.headers.origin) {
+    let allowHttp = [
+      'http://localhost:9510',
+      'http://121.42.10.104:9510',
+      'http://121.42.10.104:8085',
+      'http://localhost:8085',
+
+    ]
+    if (allowHttp.includes(req.headers.origin.toLowerCase())) {
+      res.header('Access-Control-Allow-Origin',req.headers.origin)
+    }
+    res.header('Access-Control-Allow-Credentials',true)
+    res.header('Access-Control-Allow-Headers','x-requested-with,content-type')
+  }
+  next()
+})
 app.use('/backend', function(req, res, next) {
   // var Cookies = {};
   // req.headers.cookie && req.headers.cookie.split(';').forEach(function( Cookie ) {  // forEach编辑数组
@@ -88,4 +105,4 @@ app.use(router);
 // 	console.log('服务器已启动，请访问localhost:3000');
 // });
 
-module.exports = app;
+module.exports = app
