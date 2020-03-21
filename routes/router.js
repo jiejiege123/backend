@@ -79,7 +79,17 @@ router.route('/backend/delPages')
 router.route('/backend/updatePages')
 	.post(control.updatePages)
 
-
+// 动态
+router.route('/blog/getThumbsList')
+	.get(control.getThumbsList)
+router.route('/backend/addThumb')
+	.post(control.addThumb)
+// 删除独立页面
+router.route('/backend/delThumb')
+	.post(control.delThumb)
+// 编辑独立页面
+router.route('/backend/updateThumb')
+	.post(control.updateThumb)
 
 // /////////////////////////////////////// 博客前台
 // 获取路由

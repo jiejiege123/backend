@@ -84,7 +84,7 @@ const header = {
     // 文章
     getArticleList: function (page, pageSize, keywords, tags, categories, cb) {
         let start = (page - 1) * pageSize
-        let sql =`select id, author, creatTime, updateTime, categories,tags,status,commentNums,title, abstract from article where title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%' limit ${start}, ${pageSize};select count(*) as total from article where id > 0 and title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%'`;
+        let sql =`select id, author, creatTime, updateTime, categories,tags,status,commentNums,title, abstract from article where title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%' order by creatTime DESC limit ${start}, ${pageSize}; select count(*) as total from article where id > 0 and title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%'`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
@@ -139,6 +139,27 @@ const header = {
     },
     delPages: function (params,cb) {
         let sql =`delete from pages where id in (${params.id});update time set activeTime = '${new Date().getTime()}'`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [], cb);
+    },
+
+    // 文章
+    getThumbsList: function (page, pageSize, keywords, cb) {
+        let start = (page - 1) * pageSize
+        let sql =`select id, body, userId, userName, creatTime from thumb where body like '%${keywords}%' order by creatTime DESC limit ${start}, ${pageSize}; select count(*) as total from thumb where id > 0 and body like '%${keywords}%'`;
+        db.connection(sql, [], cb);
+    },
+    addThumb: function (params,cb) {
+        let sql =`insert into thumb(body, userId, userName, creatTime) value(?,?,?,?);update time set activeTime = '${new Date().getTime()}'`;
+        db.connection(sql, [params.body,params.userId, params.userName, params.creatTime], cb);
+    },
+    updateThumb: function (params,cb) {
+        let sql =`update thumb set body=? where id = ${params.id};update time set activeTime = '${new Date().getTime()}'`;
+        //db.config.host = 'localhost';
+        db.connection(sql, [params.body], cb);
+    },
+    delThumb: function (params,cb) {
+        let sql =`delete from thumb where id in (${params.id});update time set activeTime = '${new Date().getTime()}'`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },

@@ -573,6 +573,98 @@ const project = {
         model.delPages(req.body, cb);
     },
 
+    // 动态
+    getThumbsList: function (req,res) {
+        console.log('124')
+        function cb(err, data) {
+            console.log(err)
+            console.log(data)
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: {
+                        data: data[0],
+                        total: data[1][0].total
+                    },
+                    Msg: '成功'
+                }
+                res.send(mydata);
+                // model.getTagsRows(cbrow)
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据获取失败'
+                })
+            }
+        }
+        let page = parseInt(req.param('page'))
+        let pageSize = parseInt(req.param('pageSize'))
+        let keywords = req.param('keyword')
+        model.getThumbsList(page,pageSize,keywords, cb);
+    },
+    addThumb: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '添加成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据添加失败'
+                })
+            }
+        }
+        model.addThumb(req.body, cb);
+    },
+    updateThumb: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '修改成功'
+                }
+                res.send(mydata);
+            } else {
+                console.log(err)
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据修改失败'
+                })
+            }
+        }
+        model.updateThumb(req.body, cb);
+    },
+    delThumb: function (req,res) {
+        function cb(err, data) {
+            if (err == null) {
+                let mydata = {
+                    Status: 200,
+                    Data: data,
+                    Msg: '删除成功'
+                }
+                res.send(mydata);
+            } else {
+                res.send({
+                    Status: 400,
+                    Data:null,
+                    Msg: '数据删除失败'
+                })
+            }
+        }
+        model.delThumb(req.body, cb);
+    },
+
     // 前台 获取路由
     getRouter: function (req, res) {
         function cb(err, data) {
