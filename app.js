@@ -15,12 +15,16 @@ var md5=require('md5-node');
 // 路由
 var router = require('./routes/router.js');
 var uploadImg = require('./routes/img.js');
+var bodyParser = require('body-parser');
+
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 var app = express();
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
 // 日志
 app.use(logger('dev'));
 //解析url编码
@@ -39,8 +43,36 @@ app.all('*', function(req, res, next) {
     let allowHttp = [
       'http://localhost:9510',
       'http://121.42.10.104:9510',
+      'http://121.42.10.104:443',
       'http://121.42.10.104:8085',
       'http://localhost:8085',
+      'http://zemengzhou.top',
+      'http://zemengzhou.top:443',
+      'http://zemengzhou.top:8085',
+      'http://zemengzhou.top:9510',
+      'http://www.zemengzhou.top',
+      'http://www.zemengzhou.top:443',
+      'http://www.zemengzhou.top:8085',
+      'http://www.zemengzhou.top:9510',
+      'http://admin.zemengzhou.top',
+      'http://admin.zemengzhou.top:443',
+      'http://home.zemengzhou.top',
+      'http://admin.zemengzhou.top:9510',
+      'http://home.zemengzhou.top:8085',
+      'https://localhost:9510',
+      'https://121.42.10.104:9510',
+      'https://121.42.10.104:8085',
+      'https://localhost:8085',
+      'https://zemengzhou.top',
+      'http://zemengzhou.top:8085',
+      'http://zemengzhou.top:9510',
+      'https://www.zemengzhou.top',
+      'https://www.zemengzhou.top:8085',
+      'https://www.zemengzhou.top:9510',
+      'https://admin.zemengzhou.top',
+      'https://home.zemengzhou.top',
+      'https://admin.zemengzhou.top:9510',
+      'https://home.zemengzhou.top:8085',
 
     ]
     if (allowHttp.includes(req.headers.origin.toLowerCase())) {
@@ -48,6 +80,7 @@ app.all('*', function(req, res, next) {
     }
     res.header('Access-Control-Allow-Credentials',true)
     res.header('Access-Control-Allow-Headers','x-requested-with,content-type')
+    res.header('Content-Security-Policy','upgrade-insecure-requests')
   }
   next()
 })

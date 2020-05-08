@@ -153,11 +153,12 @@ const project = {
     },
     getArticle: function (req, res) {
         function cb(err, data) {
+            // console.log(data)
             if (err == null) {
                 //console.log(mydata);
                 let mydata = {
                     Status: 200,
-                    Data: data[0][0],
+                    Data: data[0][0] ? data[0][0] : data[0],
                     Msg: '成功'
                 }
                 res.send(mydata);
@@ -169,7 +170,7 @@ const project = {
                 });
             }
         }
-        model.getArticle( req.param('id'), cb);
+        model.getArticle( req.param('id'), req.param('click'), req.param('type'), cb);
     },
     getCategories: function (req,res) {
         function cb(err, data) {

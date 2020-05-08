@@ -6,7 +6,7 @@
 */
 /* jshint esversion: 6 */ 
 const db = require('./../db/dbConfig.js');
-
+const parseTime = require('./../utils/index.js')
 const header = {
     login: function (name, psd, cb) {
         let sql ="select * from user where name = '" + name + "' and psd = '" + psd + "'";
@@ -15,7 +15,7 @@ const header = {
     },
     profile: function (params, cb) {
         // let sql ="update * from user where id = '" + params.id + "' and psd = '" + psd + "'";
-        let sql =`update user set userName = '${params.userName || ''}', email = '${params.email || ''}', headPhoto = '${params.headPhoto || ''}', sitName = '${params.sitName || ''}', sitHttp = '${params.sitHttp || ''}',sitDis = '${params.sitDis || ''}',sitKeys = '${params.sitKeys || ''}' where id = ${params.id}`;
+        let sql =`update user set userName = '${params.userName || ''}', email = '${params.email || ''}', headPhoto = '${params.headPhoto || ''}', sitName = '${params.sitName || ''}', sitHttp = '${params.sitHttp || ''}',sitDis = '${params.sitDis || ''}',sitKeys = '${params.sitKeys || ''}', homePage = '${params.homePage || ''}' where id = ${params.id}`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
@@ -25,9 +25,14 @@ const header = {
         //db.config.host = 'localhost';
         db.connection(sql, [params], cb);
     },
-    getArticle: function (id,cb) {
+    getArticle: function (id,click,type,cb) {
         // let sql ="update * from user where id = '" + params.id + "' and psd = '" + psd + "'";
-        let sql =`select * from article where id = ${id}; update article set visits = visits + 1 where id = ${id}`
+        let sql
+        if (click) {
+            sql =`select * from ${type} where id = ${id}; update ${type} set visits = visits + 1 where id = ${id}`
+        } else {
+            sql =`select * from article where id = ${id}`
+        }
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
@@ -84,7 +89,9 @@ const header = {
     // 文章
     getArticleList: function (page, pageSize, keywords, tags, categories, cb) {
         let start = (page - 1) * pageSize
-        let sql =`select id, author, creatTime, updateTime, categories,tags,status,commentNums,title, abstract from article where title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%' order by creatTime DESC limit ${start}, ${pageSize}; select count(*) as total from article where id > 0 and title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%'`;
+        // 当前时间
+        let time = parseTime(new Date().getTime())
+        let sql =`select id, author, creatTime, updateTime, categories,tags,status,commentNums,title, abstract from article where (title like '%${keywords}%' or body like '%${keywords}%') and tags like '%${tags}%' and categories like '%${categories}%' and updateTime < '${time}' order by creatTime DESC limit ${start}, ${pageSize}; select count(*) as total from article where id > 0 and title like '%${keywords}%' and tags like '%${tags}%' and categories like '%${categories}%'`;
         //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
