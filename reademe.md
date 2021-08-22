@@ -1,5 +1,13 @@
 node+express+mysql
 
+## 启动
+
+```
+npm start
+```
+
+## 配置相关
+
 使用前需要配置好数据库、建表。
 
 修改 db/dbConfig.js 下
@@ -24,5 +32,5 @@ config:{
 在 MySql line Client 中输入密码，进入命令行，
 
 ```
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'qwerbnm123';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
 ``` 

@@ -117,7 +117,7 @@ const header = {
         db.connection(sql, [], cb);
     },
 
-    // 页面
+    // 独立页面
     getPagesList: function (page, pageSize, keywords, cb) {
         let start = (page - 1) * pageSize
         let sql =`select id, creatTime, updateTime, commentNums,title,upIndex,eName,icon from pages where title like '%${keywords}%' limit ${start}, ${pageSize};select count(*) as total from pages where id > 0 and title like '%${keywords}%'`;

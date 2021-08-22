@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 22/08/2021 22:24:20
+ Date: 22/08/2021 23:07:40
 */
 
 SET NAMES utf8mb4;
@@ -54,6 +54,28 @@ CREATE TABLE `categories`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for pages
+-- ----------------------------
+DROP TABLE IF EXISTS `pages`;
+CREATE TABLE `pages`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `userId` int(0) NULL DEFAULT NULL COMMENT '用户id',
+  `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户姓名',
+  `creatTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发布状态 草稿/已发布',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标题',
+  `abstract` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '摘要',
+  `body` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'html文档',
+  `md` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'markdown文档',
+  `updateTime` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `commentNums` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '评论数',
+  `upIndex` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '顺序',
+  `eName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '英文',
+  `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for tags
 -- ----------------------------
 DROP TABLE IF EXISTS `tags`;
@@ -64,6 +86,28 @@ CREATE TABLE `tags`  (
   `decs` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for thumb
+-- ----------------------------
+DROP TABLE IF EXISTS `thumb`;
+CREATE TABLE `thumb`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `creatTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `updateTime` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发布状态 草稿/已发布',
+  `commentNums` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '评论数',
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标题',
+  `abstract` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '摘要',
+  `body` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'html文档',
+  `md` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT 'markdown文档',
+  `visits` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '阅读数',
+  `eName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '因为名',
+  `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标',
+  `userId` int(0) NULL DEFAULT NULL COMMENT '用户id',
+  `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for time
