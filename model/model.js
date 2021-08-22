@@ -10,7 +10,6 @@ const parseTime = require('./../utils/index.js')
 const header = {
     login: function (name, psd, cb) {
         let sql ="select * from user where name = '" + name + "' and psd = '" + psd + "'";
-        //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
     profile: function (params, cb) {
@@ -20,20 +19,16 @@ const header = {
         db.connection(sql, [], cb);
     },
     getInfo: function (params, cb) {
-        // let sql ="update * from user where id = '" + params.id + "' and psd = '" + psd + "'";
         let sql =`select * from user where id = ?`;
-        //db.config.host = 'localhost';
         db.connection(sql, [params], cb);
     },
     getArticle: function (id,click,type,cb) {
-        // let sql ="update * from user where id = '" + params.id + "' and psd = '" + psd + "'";
         let sql
         if (click) {
             sql =`select * from ${type} where id = ${id}; update ${type} set visits = visits + 1 where id = ${id}`
         } else {
             sql =`select * from article where id = ${id}`
         }
-        //db.config.host = 'localhost';
         db.connection(sql, [], cb);
     },
 
@@ -150,7 +145,7 @@ const header = {
         db.connection(sql, [], cb);
     },
 
-    // 文章
+    // 动态
     getThumbsList: function (page, pageSize, keywords, cb) {
         let start = (page - 1) * pageSize
         let sql =`select id, body, userId, userName, creatTime from thumb where body like '%${keywords}%' order by creatTime DESC limit ${start}, ${pageSize}; select count(*) as total from thumb where id > 0 and body like '%${keywords}%'`;

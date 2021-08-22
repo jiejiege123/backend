@@ -5,13 +5,13 @@
  */
 var app = require('../app');
 var debug = require('debug')('node-express:server');
-// var http = require('http');
-let https = require("https");
+var http = require('http');
+// let https = require("https");
 let fs = require("fs");
-const httpsOption = {
-  key : fs.readFileSync("./public/https/3650515_zemengzhou.top.key"),
-  cert: fs.readFileSync("./public/https/3650515_zemengzhou.top.pem")
-}
+// const httpsOption = {
+//   key : fs.readFileSync("./public/https/3650515_zemengzhou.top.key"),
+//   cert: fs.readFileSync("./public/https/3650515_zemengzhou.top.pem")
+// }
 // console.log(httpsOption.key)
 /**
  * Get port from environment and store in Express.
@@ -24,7 +24,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = https.createServer(httpsOption, app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.

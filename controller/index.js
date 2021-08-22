@@ -7,42 +7,31 @@
 /* jshint esversion: 6 */
 const model = require('../model/model.js');
 var md5=require('md5-node');
-// const path=require('path');
-// const fs=require('fs');
 const project = {
     //get 接口
     getTest:function (req,res) {
-        // console.log(req.body)
-        // console.log(req.query)
-        // console.log(req.params)
         console.log(req.param('id'))  // 参数写法 卧槽 相当的死啊
         function cb(err, data) {
             if (err == null) {
                 let mydata = {data:data};
-                //console.log(mydata);
                 res.send(mydata);
             }
         }
         model.drop_down(req.param('id'), cb);
     },
     getTestPost:function (req,res) {
-        console.log(req.body) // POST 可以这样获取
-        // console.log(req.param('id'))  // 参数写法 get post 都有效
+        console.log(req.body) 
         function cb(err, data) {
             if (err == null) {
                 let mydata = {data:data};
-                //console.log(mydata);
                 res.send(mydata);
             }
         }
         model.drop_down(req.body.id, cb);
     },
     login:function (req,res) {
-        // console.log(req.body) // POST 可以这样获取
         let username = req.body.username
         let password = req.body.password
-        // console.log(username, password)
-        // console.log(req.param('id'))  // 参数写法 get post 都有效
         function cb(err, data) {
             // console.log(err, data)
             if (err == null) {
@@ -58,10 +47,7 @@ const project = {
                     }
                     let account = md5(data[0].name) +'-'+ md5(data[0].psd)
                     let ssid = md5(md5(data[0].name)) + md5(md5(data[0].psd))
-                    // 设置cookies
-                    // res.writeHead(200, {
-                    //     'Set-Cookie': ['ssid = ' + ssid, 'account = ' + account] // cookie名=cookie值
-                    // });
+
                     res.cookie('account', account)
                     res.cookie('ssid', ssid)
                 } else {
@@ -83,12 +69,10 @@ const project = {
         model.login(username, password, cb);
     },
     profile: function (req, res) {
-        console.log('req.body',req.body) // POST 可以这样获取
-        // console.log(req.param('id'))  // 参数写法 get post 都有效
+        console.log('req.body',req.body) 
         function cb(err, data) {
             console.log('data',data)
             if (err == null) {
-                //console.log(mydata);
                 let mydata = {
                     Status: 200,
                     Data: '',
@@ -108,9 +92,6 @@ const project = {
         model.profile(req.body, cb);
     },
     getInfo:function (req,res) {
-        // console.log(req.body) // POST 可以这样获取
-        // console.log(username, password)
-        // console.log(req.param('id'))  // 参数写法 get post 都有效
         function cb(err, data) {
             // console.log(err, data)
             if (err == null) {
@@ -139,7 +120,6 @@ const project = {
                         Msg: '信息获取失败'
                     }
                 }
-                //console.log(mydata);
                 res.send(Data);
             } else {
                 res.send({
@@ -153,9 +133,7 @@ const project = {
     },
     getArticle: function (req, res) {
         function cb(err, data) {
-            // console.log(data)
             if (err == null) {
-                //console.log(mydata);
                 let mydata = {
                     Status: 200,
                     Data: data[0][0] ? data[0][0] : data[0],
@@ -184,7 +162,6 @@ const project = {
                     Msg: '成功'
                 }
                 res.send(mydata);
-                // model.getCategoriesRows(cbrow)
             } else {
                 console.log(err)
                 res.send({
@@ -210,7 +187,6 @@ const project = {
                     Msg: '成功'
                 }
                 res.send(mydata);
-                // model.getCategoriesRows(cbrow)
             } else {
                 console.log(err)
                 res.send({
@@ -385,7 +361,6 @@ const project = {
                     Msg: '成功'
                 }
                 res.send(mydata);
-                // model.getTagsRows(cbrow)
             } else {
                 console.log(err)
                 res.send({
@@ -689,6 +664,7 @@ const project = {
     },
     getArticleOrder: function (req, res) {
         function cb(err, data) {
+            console.log(data);
             if (err == null) {
                 //console.log(mydata);
                 let mydata = {
@@ -700,7 +676,7 @@ const project = {
             } else {
                 res.send({
                     Status: 400,
-                    Data:null,
+                    Data:err,
                     Msg: '获取失败'
                 });
             }

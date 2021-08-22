@@ -41,39 +41,7 @@ let activeTime
 app.all('*', function(req, res, next) {
   if (req.headers.origin) {
     let allowHttp = [
-      'http://localhost:9510',
-      'http://121.42.10.104:9510',
-      'http://121.42.10.104:443',
-      'http://121.42.10.104:8085',
-      'http://localhost:8085',
-      'http://zemengzhou.top',
-      'http://zemengzhou.top:443',
-      'http://zemengzhou.top:8085',
-      'http://zemengzhou.top:9510',
-      'http://www.zemengzhou.top',
-      'http://www.zemengzhou.top:443',
-      'http://www.zemengzhou.top:8085',
-      'http://www.zemengzhou.top:9510',
-      'http://admin.zemengzhou.top',
-      'http://admin.zemengzhou.top:443',
-      'http://home.zemengzhou.top',
-      'http://admin.zemengzhou.top:9510',
-      'http://home.zemengzhou.top:8085',
-      'https://localhost:9510',
-      'https://121.42.10.104:9510',
-      'https://121.42.10.104:8085',
-      'https://localhost:8085',
-      'https://zemengzhou.top',
-      'http://zemengzhou.top:8085',
-      'http://zemengzhou.top:9510',
-      'https://www.zemengzhou.top',
-      'https://www.zemengzhou.top:8085',
-      'https://www.zemengzhou.top:9510',
-      'https://admin.zemengzhou.top',
-      'https://home.zemengzhou.top',
-      'https://admin.zemengzhou.top:9510',
-      'https://home.zemengzhou.top:8085',
-
+      'http://localhost:9510'
     ]
     if (allowHttp.includes(req.headers.origin.toLowerCase())) {
       res.header('Access-Control-Allow-Origin',req.headers.origin)
@@ -85,11 +53,7 @@ app.all('*', function(req, res, next) {
   next()
 })
 app.use('/backend', function(req, res, next) {
-  // var Cookies = {};
-  // req.headers.cookie && req.headers.cookie.split(';').forEach(function( Cookie ) {  // forEach编辑数组
-  //     var parts = Cookie.split('=');  // 以=为分隔符，把字符串分隔成数组
-  //     Cookies[ parts[ 0 ].trim() ] = ( parts[ 1 ] || '' ).trim(); // 把数组内容以json的形式存储
-  // });
+
   let Cookies = req.cookies
   let flag = true
   if (Cookies.account) {

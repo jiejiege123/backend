@@ -99,6 +99,4 @@ router.route('/blog/getArticleOrder')
 	.get(control.getArticleOrder)
 	
 
-
-
 module.exports = router
