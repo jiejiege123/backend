@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-03-11 08:29:17
- * @LastEditTime: 2020-03-11 11:11:26
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-08-23 08:57:22
+ * @LastEditors: zzz
  * @Description: In User Settings Edit
  * @FilePath: \backend\app.js
  */
@@ -16,6 +16,7 @@ var md5=require('md5-node');
 var router = require('./routes/router.js');
 var uploadImg = require('./routes/img.js');
 var bodyParser = require('body-parser');
+var compression = require('compression') // gzip
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
@@ -23,6 +24,8 @@ var app = express();
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
+app.use(compression()); // gzip
+
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: false}));
 // 日志
